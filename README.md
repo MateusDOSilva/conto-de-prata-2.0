@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Conto de Prata 2.0 — Catálogo de Semijoias
 
-## Getting Started
+Catálogo online com pedido via WhatsApp. Next.js (App Router) + TypeScript + Tailwind + Supabase (Postgres, Auth, Storage) + Zod.
 
-First, run the development server:
+Decisões de arquitetura: [`docs/architecture.md`](docs/architecture.md).
+
+## Requisitos
+
+- Node.js 22 (`.nvmrc`)
+- Docker (para o Supabase local) — opcional se usar um projeto Supabase na nuvem
+
+## Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm ci
+cp .env.example .env.local     # preencher com as chaves do Supabase
+
+# Supabase local (Docker)
+npm run db:start               # sobe Postgres/Auth/Storage e mostra URL + chaves
+npm run db:reset               # aplica supabase/migrations + supabase/seed.sql
+npm run db:types               # gera src/types/database.types.ts
+
+npm run dev                    # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Criar o administrador
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+O cadastro público está desativado. Crie o usuário no painel do Supabase (Authentication → Add user) e promova:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```sql
+update public.profiles set role = 'admin' where id = '<uuid-do-usuario>';
+```
 
-## Learn More
+## Scripts
 
-To learn more about Next.js, take a look at the following resources:
+| Script                                  | O que faz                                              |
+| --------------------------------------- | ------------------------------------------------------ |
+| `npm run dev` / `build` / `start`       | Next.js                                                |
+| `npm run lint` / `typecheck` / `format` | qualidade                                              |
+| `npm test`                              | testes unitários (Vitest)                              |
+| `npm run db:test`                       | testes do banco (pgTAP, `supabase test db`)            |
+| `scripts/db-validate/run.sh`            | valida migrations + RLS num Postgres puro (sem Docker) |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Estrutura
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/app/            rotas (público e /admin)
+src/components/     UI por domínio (catalog, cart, checkout, admin, layout, ui)
+src/lib/services/   regras de negócio
+src/lib/supabase/   clientes (server, browser, service role server-only, middleware)
+src/lib/validations schemas Zod
+supabase/           config, migrations, seed
+docs/               arquitetura
+```
