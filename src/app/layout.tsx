@@ -1,30 +1,43 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Cormorant_Garamond, Inter } from 'next/font/google';
+import { publicEnv } from '@/lib/env';
+import { getStoreSettings } from '@/lib/services/store-settings.service';
 import './globals.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const inter = Inter({ variable: '--font-inter', subsets: ['latin'], display: 'swap' });
+const cormorant = Cormorant_Garamond({
+  variable: '--font-cormorant',
   subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  display: 'swap',
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getStoreSettings().catch(() => null);
+  const name = settings?.store_name ?? 'Catálogo de Semijoias';
+  const description = settings?.description ?? 'Catálogo online de semijoias.';
+  return {
+    metadataBase: new URL(publicEnv.siteUrl),
+    title: { default: name, template: `%s | ${name}` },
+    description,
+    applicationName: name,
+    icons: settings?.favicon_url ? { icon: settings.favicon_url } : undefined,
+    openGraph: {
+      type: 'website',
+      locale: 'pt_BR',
+      siteName: name,
+      title: name,
+      description,
+      images: settings?.logo_url ? [{ url: settings.logo_url }] : undefined,
+    },
+    twitter: { card: 'summary_large_image' },
+  };
+}
 
-export const metadata: Metadata = {
-  title: 'Conto de Prata — Semijoias',
-  description: 'Catálogo online de semijoias.',
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body className={`${inter.variable} ${cormorant.variable}`}>{children}</body>
     </html>
   );
 }
