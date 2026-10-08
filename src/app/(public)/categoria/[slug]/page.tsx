@@ -20,9 +20,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!category) return {};
   return {
     title: category.name,
-    description: `${category.name} — semijoias do nosso catálogo.`,
+    description: `Explore ${category.name.toLowerCase()} e acessórios da nossa coleção. Encontre uma peça para contar a sua história na Conto de Pratas.`,
     alternates: { canonical: `/categoria/${category.slug}` },
-    openGraph: { title: category.name, url: `/categoria/${category.slug}` },
+    openGraph: {
+      type: 'website',
+      title: `${category.name} | Conto de Pratas`,
+      description: `Explore ${category.name.toLowerCase()} e acessórios da Conto de Pratas.`,
+      url: `/categoria/${category.slug}`,
+    },
   };
 }
 

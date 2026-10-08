@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { updateOrderStatusAction } from '@/lib/actions/admin-order.actions';
+import { UpdateOrderStatusForm } from '@/components/admin/update-order-status-form';
 import { formatBRL } from '@/lib/format/currency';
 import { STATUS_LABELS } from '@/lib/format/order-status';
 import { formatBrazilPhone } from '@/lib/format/phone';
@@ -63,27 +63,7 @@ export default async function OrdersPage({
                   </a>
                 </p>
               </div>
-              <form action={updateOrderStatusAction} className="flex items-center gap-2">
-                <input type="hidden" name="id" value={o.id} />
-                <label htmlFor={`status-${o.id}`} className="sr-only">
-                  Status
-                </label>
-                <select
-                  id={`status-${o.id}`}
-                  name="status"
-                  defaultValue={o.status}
-                  className="rounded-lg border border-neutral-300 px-2 py-1 text-sm"
-                >
-                  {ORDER_STATUSES.map((s) => (
-                    <option key={s} value={s}>
-                      {STATUS_LABELS[s]}
-                    </option>
-                  ))}
-                </select>
-                <button className="rounded-lg bg-neutral-900 px-3 py-1 text-sm text-white">
-                  Atualizar
-                </button>
-              </form>
+              <UpdateOrderStatusForm id={o.id} status={o.status} />
             </div>
             <ul className="mt-3 border-t pt-3 text-sm">
               {o.items.map((i) => (

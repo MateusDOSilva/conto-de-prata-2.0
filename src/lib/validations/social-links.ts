@@ -4,8 +4,6 @@ export const SOCIAL_NETWORKS = {
   instagram_url: { label: 'Instagram', hosts: ['instagram.com'] },
   facebook_url: { label: 'Facebook', hosts: ['facebook.com', 'fb.com'] },
   tiktok_url: { label: 'TikTok', hosts: ['tiktok.com'] },
-  youtube_url: { label: 'YouTube', hosts: ['youtube.com', 'youtu.be'] },
-  linkedin_url: { label: 'LinkedIn', hosts: ['linkedin.com'] },
 } as const;
 
 export type SocialNetworkKey = keyof typeof SOCIAL_NETWORKS;

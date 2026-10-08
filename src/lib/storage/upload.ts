@@ -62,3 +62,9 @@ export function getFile(form: FormData, name: string): File | null {
   const value = form.get(name);
   return value instanceof File && value.size > 0 ? value : null;
 }
+
+export function getFiles(form: FormData, name: string): File[] {
+  return form
+    .getAll(name)
+    .filter((value): value is File => value instanceof File && value.size > 0);
+}

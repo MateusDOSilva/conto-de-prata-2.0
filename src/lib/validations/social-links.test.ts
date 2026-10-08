@@ -8,11 +8,24 @@ describe('SocialLinksSchema', () => {
     const r = parse({
       instagram_url: 'https://www.instagram.com/minhaloja',
       facebook_url: '',
-      youtube_url: 'https://youtu.be/abc',
+      tiktok_url: 'https://www.tiktok.com/@minhaloja',
     });
     expect(r.success).toBe(true);
     expect(r.data?.facebook_url).toBeNull();
-    expect(r.data?.tiktok_url).toBeNull();
+    expect(r.data?.tiktok_url).toBe('https://www.tiktok.com/@minhaloja');
+  });
+
+  it('não aceita mais campos para YouTube e LinkedIn', () => {
+    const r = parse({
+      youtube_url: 'https://youtu.be/abc',
+      linkedin_url: 'https://linkedin.com/company/minhaloja',
+    });
+    expect(r.success).toBe(true);
+    expect(r.data).toEqual({
+      instagram_url: null,
+      facebook_url: null,
+      tiktok_url: null,
+    });
   });
 
   it.each([

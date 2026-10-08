@@ -22,6 +22,10 @@ export const WhatsAppNumberSchema = z
 export const StoreSettingsSchema = z
   .object({
     store_name: z.string().transform(cleanText).pipe(z.string().min(1, 'Informe o nome').max(80)),
+    presentation_title: z
+      .string()
+      .transform(cleanText)
+      .pipe(z.string().min(1, 'Informe o título').max(120)),
     description: z
       .string()
       .optional()

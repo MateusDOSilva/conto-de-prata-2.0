@@ -72,6 +72,8 @@ erDiagram
   STORE_SETTINGS {
     uuid id PK
     text store_name
+    text presentation_title
+    text description
     text whatsapp_number
     text cores
     text redes_sociais "linha única"
@@ -95,6 +97,12 @@ erDiagram
     numeric subtotal
   }
 ```
+
+The additive migration `20261007001200_add_presentation_title.sql` adds the editable homepage
+presentation title. Migration `20261007001300_allow_presentation_asset_upload.sql` lets admins
+upload presentation images to Storage, and `20261007001400_convert_presentation_image_to_gallery.sql`
+stores up to three image URLs for the homepage carousel. The existing `description` field supplies
+the supporting text; these fields are managed in `/admin/configuracoes`.
 
 `store_settings` não se relaciona com nada — é uma linha única (garantida por `UNIQUE INDEX ((true))`).
 
@@ -230,7 +238,7 @@ Limitação conhecida (MVP): se a mesma chave for reenviada com carrinho diferen
 
 ## 8. Redes sociais
 
-- 5 campos opcionais em `store_settings`. `SocialLinksSchema` (Zod) por campo: string vazia → `null`; `new URL()` válido; `protocol === 'https:'`; hostname na allowlist da rede (`instagram.com`, `facebook.com`/`fb.com`, `tiktok.com`, `youtube.com`/`youtu.be`, `linkedin.com`, com `www.` opcional).
+- 3 campos opcionais usados pela aplicação em `store_settings`: Instagram, Facebook e TikTok. `SocialLinksSchema` (Zod) por campo: string vazia → `null`; `new URL()` válido; `protocol === 'https:'`; hostname na allowlist da rede (`instagram.com`, `facebook.com`/`fb.com`, `tiktok.com`, com `www.` opcional). As colunas antigas de YouTube e LinkedIn permanecem no banco por compatibilidade, mas não são editadas nem exibidas.
 - Banco: `CHECK (... ~* '^https://')` como última barreira (`javascript:`, `data:`, `http:` recusados — testado).
 - `<SocialLinks>` filtra os nulos → só renderiza os configurados; links com `target="_blank" rel="noopener noreferrer"` e `aria-label`.
 

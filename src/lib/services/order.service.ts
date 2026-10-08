@@ -99,8 +99,14 @@ export async function listOrders(opts: { status?: OrderStatus } = {}) {
 
 export async function updateOrderStatus(id: string, status: OrderStatus) {
   const supabase = await createClient();
-  const { error } = await supabase.from('orders').update({ status }).eq('id', id);
+  const { data, error } = await supabase
+    .from('orders')
+    .update({ status })
+    .eq('id', id)
+    .select('id')
+    .maybeSingle();
   if (error) throw error;
+  if (!data) throw new Error('Pedido não encontrado ou sem permissão para atualizar.');
 }
 
 export async function getOrderStats() {

@@ -41,6 +41,34 @@ update public.profiles set role = 'admin' where id = '<uuid-do-usuario>';
 | `npm run db:test`                       | testes do banco (pgTAP, `supabase test db`)            |
 | `scripts/db-validate/run.sh`            | valida migrations + RLS num Postgres puro (sem Docker) |
 
+## Publicação do MVP
+
+1. Publique o repositório na Vercel e configure as variáveis de produção:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `NEXT_PUBLIC_SITE_URL` com a URL HTTPS pública final (por exemplo, `https://www.sualoja.com.br`)
+   - `SUPABASE_SERVICE_ROLE_KEY` como variável **somente de servidor**, nunca com prefixo `NEXT_PUBLIC_`
+2. Aponte o domínio para a Vercel e mantenha `NEXT_PUBLIC_SITE_URL` igual à URL canônica escolhida. Essa URL é usada no sitemap, canonical e metadados de compartilhamento.
+3. Cadastre produtos reais, preços, fotos, número de WhatsApp e informações da loja em `/admin`. Produtos `DEMO` não devem ser ativados para venda.
+4. Faça um pedido de teste no domínio publicado, confirme a abertura da conversa no WhatsApp e confira a atualização do pedido no painel antes de anunciar a loja.
+
+### Acesso do administrador após o deploy
+
+- Abra `https://<seu-domínio>/admin`; sem sessão, o sistema redireciona para `/admin/login`.
+- O login usa o e-mail e a senha do usuário criado em Supabase → Authentication → Users. Cadastro público não está habilitado.
+- Para autorizar esse usuário, execute no SQL Editor do **mesmo projeto Supabase de produção**, substituindo o e-mail:
+
+  ```sql
+  update public.profiles as p
+  set role = 'admin'
+  from auth.users as u
+  where p.id = u.id
+    and lower(u.email) = lower('admin@seudominio.com')
+  returning u.email, p.role;
+  ```
+
+- O resultado deve retornar a função `admin`. Saia e entre novamente no painel após a promoção. Nunca coloque credenciais de administrador ou a service role key no repositório.
+
 ## Estrutura
 
 ```

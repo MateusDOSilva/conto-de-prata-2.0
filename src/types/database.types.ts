@@ -21,6 +21,8 @@ type ProductRow = Timestamps & {
 type StoreSettingsRow = Timestamps & {
   id: string;
   store_name: string;
+  presentation_title: string;
+  presentation_images: string[];
   description: string | null;
   logo_url: string | null;
   favicon_url: string | null;

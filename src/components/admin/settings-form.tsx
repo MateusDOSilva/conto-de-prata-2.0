@@ -30,7 +30,22 @@ export function SettingsForm({ settings }: { settings: StoreSettings }) {
             className={inputClass}
           />
         </Field>
-        <Field label="Descrição" name="description" state={state}>
+        <Field label="Título da apresentação" name="presentation_title" state={state}>
+          <input
+            id="presentation_title"
+            name="presentation_title"
+            required
+            maxLength={120}
+            defaultValue={settings.presentation_title}
+            className={inputClass}
+          />
+        </Field>
+        <Field
+          label="Texto da apresentação"
+          name="description"
+          state={state}
+          hint="Exibido abaixo do título na página inicial."
+        >
           <textarea
             id="description"
             name="description"
@@ -39,6 +54,42 @@ export function SettingsForm({ settings }: { settings: StoreSettings }) {
             defaultValue={settings.description ?? ''}
             className={inputClass}
           />
+        </Field>
+        <Field
+          label="Imagens da apresentação"
+          name="presentation_images"
+          hint="Escolha até 3 fotos. JPG, PNG ou WebP, até 2 MB cada e 5 MB no total."
+        >
+          {settings.presentation_images.length > 0 && (
+            <div className="my-2 flex flex-wrap gap-2">
+              {settings.presentation_images.map((url) => (
+                <Image
+                  key={url}
+                  src={url}
+                  alt=""
+                  width={96}
+                  height={96}
+                  className="size-24 rounded-lg object-cover"
+                />
+              ))}
+            </div>
+          )}
+          <div className="mt-2">
+            <input
+              id="presentation_images"
+              name="presentation_images"
+              type="file"
+              multiple
+              accept="image/jpeg,image/png,image/webp"
+              className="peer sr-only"
+            />
+            <label
+              htmlFor="presentation_images"
+              className="inline-flex cursor-pointer items-center rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-neutral-900 hover:bg-neutral-700"
+            >
+              {settings.presentation_images.length > 0 ? 'Trocar fotos' : 'Adicionar fotos'}
+            </label>
+          </div>
         </Field>
         <Field
           label="WhatsApp da loja"
@@ -82,22 +133,41 @@ export function SettingsForm({ settings }: { settings: StoreSettings }) {
               className="my-2 size-16 rounded-full object-cover"
             />
           )}
-          <input
-            id="logo"
-            name="logo"
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            className="mt-1 block text-sm"
-          />
+          <div className="mt-2">
+            <input
+              id="logo"
+              name="logo"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="peer sr-only"
+            />
+            <label
+              htmlFor="logo"
+              className="inline-flex cursor-pointer items-center rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-neutral-900 hover:bg-neutral-700"
+            >
+              {settings.logo_url ? 'Trocar logo' : 'Adicionar logo'}
+            </label>
+          </div>
         </Field>
         <Field label="Favicon" name="favicon" hint="ICO ou PNG, até 2 MB.">
-          <input
-            id="favicon"
-            name="favicon"
-            type="file"
-            accept="image/x-icon,image/png"
-            className="mt-1 block text-sm"
-          />
+          {settings.favicon_url && (
+            <p className="mt-2 text-xs text-neutral-500">Favicon atual configurado.</p>
+          )}
+          <div className="mt-2">
+            <input
+              id="favicon"
+              name="favicon"
+              type="file"
+              accept="image/x-icon,image/png"
+              className="peer sr-only"
+            />
+            <label
+              htmlFor="favicon"
+              className="inline-flex cursor-pointer items-center rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-neutral-900 hover:bg-neutral-700"
+            >
+              {settings.favicon_url ? 'Trocar favicon' : 'Adicionar favicon'}
+            </label>
+          </div>
         </Field>
       </fieldset>
 

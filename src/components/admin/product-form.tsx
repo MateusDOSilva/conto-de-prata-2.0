@@ -78,7 +78,12 @@ export function ProductForm({
           className={inputClass}
         />
       </Field>
-      <Field label="Foto" name="image" state={state} hint="JPG, PNG, WebP ou AVIF, até 5 MB.">
+      <Field
+        label="Imagem do produto"
+        name="image"
+        state={state}
+        hint="Opcional. JPG, PNG, WebP ou AVIF, até 5 MB."
+      >
         {product?.image_url && (
           <Image
             src={product.image_url}
@@ -88,13 +93,21 @@ export function ProductForm({
             className="my-2 size-24 rounded-lg object-cover"
           />
         )}
-        <input
-          id="image"
-          name="image"
-          type="file"
-          accept="image/jpeg,image/png,image/webp,image/avif"
-          className="mt-1 block text-sm"
-        />
+        <div className="mt-2">
+          <input
+            id="image"
+            name="image"
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/avif"
+            className="peer sr-only"
+          />
+          <label
+            htmlFor="image"
+            className="inline-flex cursor-pointer items-center rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-neutral-900 hover:bg-neutral-700"
+          >
+            {product?.image_url ? 'Trocar foto' : 'Adicionar foto'}
+          </label>
+        </div>
       </Field>
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" name="active" defaultChecked={product?.active ?? true} /> Produto

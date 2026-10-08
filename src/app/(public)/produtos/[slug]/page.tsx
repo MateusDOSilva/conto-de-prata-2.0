@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { AddToCartButton } from '@/components/cart/add-to-cart-button';
 import { formatBRL } from '@/lib/format/currency';
+import { publicEnv } from '@/lib/env';
 import { getActiveProductBySlug } from '@/lib/services/product.service';
 import { SlugSchema } from '@/lib/validations/catalog';
 import { MAX_QUANTITY_PER_PRODUCT } from '@/lib/validations/order';
@@ -53,7 +54,9 @@ export default async function ProductPage({ params }: Props) {
       priceCurrency: 'BRL',
       price: Number(product.price).toFixed(2),
       availability: 'https://schema.org/InStock',
+      url: `${publicEnv.siteUrl}/produtos/${product.slug}`,
     },
+    brand: { '@type': 'Brand', name: 'Conto de Pratas' },
   };
 
   return (

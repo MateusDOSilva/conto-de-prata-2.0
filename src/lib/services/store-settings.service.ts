@@ -15,7 +15,11 @@ export const getStoreSettings = cache(async (): Promise<StoreSettings | null> =>
 
 /** Admin: atualiza a linha única. RLS garante que só admin consegue. */
 export async function updateStoreSettings(
-  input: StoreSettingsInput & { logo_url?: string | null; favicon_url?: string | null },
+  input: StoreSettingsInput & {
+    logo_url?: string | null;
+    favicon_url?: string | null;
+    presentation_images?: string[];
+  },
 ) {
   const supabase = await createClient();
   const current = await getStoreSettings();
